@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto">
         {/* Big name */}
         <h2 className="text-6xl sm:text-8xl md:text-9xl lg:text-[12rem] font-extrabold font-display leading-none text-heading mb-16 tracking-tighter">
-          SAEED<span className="text-primary">.</span>
+          Saeed<span className="text-primary">.</span>
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16">

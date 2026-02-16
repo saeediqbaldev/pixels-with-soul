@@ -31,14 +31,15 @@ const AboutSection = () => {
 
       gsap.fromTo(
         ".stat-item",
-        { y: 40, opacity: 0 },
+        { y: 40, opacity: 0, scale: 0.9 },
         {
           y: 0,
           opacity: 1,
-          stagger: 0.15,
-          duration: 0.6,
-          ease: "power3.out",
-          scrollTrigger: { trigger: ".stats-grid", start: "top 80%" },
+          scale: 1,
+          stagger: 0.12,
+          duration: 0.7,
+          ease: "back.out(1.4)",
+          scrollTrigger: { trigger: ".stats-grid", start: "top 85%" },
         }
       );
     }, sectionRef);
@@ -72,14 +73,16 @@ const AboutSection = () => {
         </div>
 
         {/* Stats */}
-        <div className="stats-grid grid grid-cols-2 md:grid-cols-4 gap-6 mt-20">
+        <div className="stats-grid grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-20">
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="stat-item glass-card p-8 text-center"
+              className="stat-item glass-card p-6 sm:p-8 text-center hover-lift"
             >
-              <div className="stat-number">{stat.number}</div>
-              <p className="text-sm text-muted-foreground mt-2 uppercase tracking-widest font-body">
+              <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold font-display text-primary leading-none">
+                {stat.number}
+              </div>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-3 uppercase tracking-widest font-body">
                 {stat.label}
               </p>
             </div>

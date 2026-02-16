@@ -25,8 +25,11 @@ const ProjectsSection = () => {
     const clamped = Math.max(0, Math.min(index, projects.length - 1));
     setCurrent(clamped);
     if (trackRef.current) {
+      const card = trackRef.current.children[0] as HTMLElement;
+      if (!card) return;
+      const gap = 24;
       gsap.to(trackRef.current, {
-        x: -clamped * (trackRef.current.children[0] as HTMLElement).offsetWidth - clamped * 24,
+        x: -clamped * (card.offsetWidth + gap),
         duration: 0.8,
         ease: "power3.out",
       });
@@ -82,22 +85,28 @@ const ProjectsSection = () => {
       <div className="section-padding overflow-hidden">
         <div ref={trackRef} className="flex gap-6" style={{ willChange: "transform" }}>
           {projects.map((p, i) => (
-            <div
+            <a
               key={i}
+              href={p.url}
+              target="_blank"
+              rel="noopener noreferrer"
               className="project-card group flex-shrink-0 w-[85vw] sm:w-[70vw] md:w-[50vw] lg:w-[40vw] aspect-[4/3]"
             >
               <img src={p.image} alt={p.title} />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+              {/* Default overlay gradient for readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+              {/* Hover intensified overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 md:p-8">
                 <p className="text-xs uppercase tracking-widest text-primary mb-2 font-body">{p.category}</p>
-                <div className="flex items-end justify-between">
-                  <h3 className="text-xl md:text-2xl font-bold font-display">{p.title}</h3>
-                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="flex items-end justify-between gap-4">
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold font-display text-heading leading-snug">{p.title}</h3>
+                  <div className="w-10 h-10 flex-shrink-0 rounded-full bg-primary flex items-center justify-center text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <ArrowUpRight className="w-5 h-5" />
                   </div>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>

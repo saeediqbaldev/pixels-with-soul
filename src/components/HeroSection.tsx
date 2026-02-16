@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ArrowDown } from "lucide-react";
+
 import heroImage from "@/assets/hero-portrait.jpg";
 
 const HeroSection = () => {
@@ -82,11 +82,6 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 scroll-indicator flex-col items-center hidden md:flex">
-        <span className="text-xs mb-3">Scroll Down</span>
-        <ArrowDown className="w-4 h-4 animate-bounce" />
-      </div>
     </section>
   );
 };
