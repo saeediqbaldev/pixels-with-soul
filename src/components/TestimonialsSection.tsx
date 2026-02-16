@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
+import { Quote } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -46,21 +46,8 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const [current, setCurrent] = useState(0);
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const goTo = (index: number) => {
-    const next = ((index % testimonials.length) + testimonials.length) % testimonials.length;
-    gsap.to(cardRef.current, {
-      opacity: 0,
-      y: 20,
-      duration: 0.3,
-      onComplete: () => {
-        setCurrent(next);
-        gsap.fromTo(cardRef.current, { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" });
-      },
-    });
-  };
+  const trackRef = useRef<HTMLDivElement>(null);
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -79,47 +66,73 @@ const TestimonialsSection = () => {
     return () => ctx.revert();
   }, []);
 
-  const t = testimonials[current];
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const setupCarousel = () => {
+      const totalWidth = track.scrollWidth / 2;
+      tweenRef.current = gsap.to(track, {
+        x: -totalWidth,
+        duration: 40,
+        ease: "none",
+        repeat: -1,
+        modifiers: {
+          x: gsap.utils.unitize((x) => parseFloat(x) % totalWidth),
+        },
+      });
+    };
+
+    const timer = setTimeout(setupCarousel, 200);
+    return () => {
+      clearTimeout(timer);
+      tweenRef.current?.kill();
+    };
+  }, []);
+
+  const handleMouseEnter = () => tweenRef.current?.pause();
+  const handleMouseLeave = () => tweenRef.current?.resume();
+
+  const renderCards = () =>
+    testimonials.map((t, i) => (
+      <div
+        key={i}
+        className="flex-shrink-0 w-[85vw] sm:w-[400px] md:w-[450px] glass-card p-6 sm:p-8 flex flex-col justify-between"
+      >
+        <div>
+          <Quote className="w-8 h-8 text-primary mb-4" />
+          <p className="text-sm sm:text-base text-foreground leading-relaxed font-body">
+            "{t.text}"
+          </p>
+        </div>
+        <div className="mt-6 pt-4 border-t border-border">
+          <p className="text-base font-bold font-display text-heading">{t.name}</p>
+          <p className="text-xs text-muted-foreground font-body">
+            {t.role} — {t.company}
+          </p>
+        </div>
+      </div>
+    ));
 
   return (
-    <section ref={sectionRef} id="testimonials" className="py-32 section-padding">
-      <div className="max-w-5xl mx-auto">
+    <section ref={sectionRef} id="testimonials" className="py-32 overflow-hidden">
+      <div className="section-padding max-w-7xl mx-auto">
         <div className="testimonial-header text-center mb-16">
           <p className="text-xs uppercase tracking-[0.3em] text-primary mb-4 font-body">Testimonials</p>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-display">
             What clients <span className="text-gradient">say</span>
           </h2>
         </div>
+      </div>
 
-        <div ref={cardRef} className="testimonial-card text-center max-w-3xl mx-auto">
-          <Quote className="w-10 h-10 text-primary mx-auto mb-8" />
-          <p className="text-xl md:text-2xl text-foreground leading-relaxed mb-10 font-body">
-            "{t.text}"
-          </p>
-          <div>
-            <p className="text-lg font-bold font-display text-heading">{t.name}</p>
-            <p className="text-sm text-muted-foreground font-body">
-              {t.role} — {t.company}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-center gap-4 mt-10">
-          <button
-            onClick={() => goTo(current - 1)}
-            className="w-14 h-14 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <span className="text-sm text-muted-foreground font-body">
-            {String(current + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}
-          </span>
-          <button
-            onClick={() => goTo(current + 1)}
-            className="w-14 h-14 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-          >
-            <ArrowRight className="w-5 h-5" />
-          </button>
+      <div
+        className="overflow-hidden"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div ref={trackRef} className="flex gap-6 will-change-transform">
+          {renderCards()}
+          {renderCards()}
         </div>
       </div>
     </section>
