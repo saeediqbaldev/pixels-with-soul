@@ -22,6 +22,8 @@ const CustomCursor = () => {
     const shrink = () => {
       gsap.to(follower, { scale: 1, opacity: 1, duration: 0.3 });
       gsap.to(cursor, { scale: 1, duration: 0.3 });
+      // Reset color
+      cursor.style.background = "hsl(var(--primary))";
     };
 
     window.addEventListener("mousemove", moveCursor);
@@ -45,6 +47,7 @@ const CustomCursor = () => {
     <>
       <div
         ref={cursorRef}
+        data-cursor-dot
         className="fixed top-0 left-0 w-3 h-3 rounded-full bg-primary pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 mix-blend-difference hidden md:block"
       />
       <div
