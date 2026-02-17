@@ -62,13 +62,13 @@ const HeroSection = () => {
               href="#contact"
               className="px-8 py-4 rounded-full bg-primary text-primary-foreground font-display font-bold text-sm uppercase tracking-widest hover:scale-105 transition-transform duration-300"
             >
-              Contact Me
+              Book A Call
             </a>
             <a
               href="#projects"
               className="px-8 py-4 rounded-full border border-border text-foreground font-display font-bold text-sm uppercase tracking-widest hover:bg-secondary transition-all duration-300"
             >
-              See My Work
+              Portfolio
             </a>
           </div>
         </div>

@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@100,200,300,400,500,700,800,900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -65,7 +66,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Cabinet Grotesk', sans-serif;
     color: hsl(var(--heading));
   }
 }
@@ -118,7 +119,7 @@
 
   .stat-number {
     @apply text-5xl md:text-7xl font-extrabold;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Cabinet Grotesk', sans-serif;
     color: hsl(var(--primary));
   }
 
@@ -134,7 +135,7 @@
 
   .service-number {
     @apply text-7xl md:text-8xl font-extrabold leading-none;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Cabinet Grotesk', sans-serif;
     color: hsl(var(--border));
   }
 
@@ -163,7 +164,7 @@
 
 @layer utilities {
   .font-display {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Cabinet Grotesk', sans-serif;
   }
 
   .font-body {
@@ -215,4 +216,11 @@
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
+}
+
+/* Hide default cursor on desktop for custom cursor */
+@media (min-width: 768px) {
+  * {
+    cursor: none !important;
+  }
 }

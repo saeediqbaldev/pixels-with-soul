@@ -62,12 +62,12 @@ const OffCanvasMenu = ({ isOpen, onClose }: OffCanvasMenuProps) => {
       />
       <div
         ref={menuRef}
-        className="off-canvas-menu flex flex-col justify-between p-10 md:p-14"
+        className="off-canvas-menu flex flex-col justify-between p-6 sm:p-10 md:p-14"
         style={{ transform: "translateX(100%)" }}
       >
         <div>
-          <div className="flex justify-between items-center mb-16">
-            <span className="font-display text-lg font-bold text-heading">Navigation</span>
+          <div className="flex justify-between items-center mb-10 sm:mb-16">
+            <span className="font-display text-2xl font-extrabold text-heading">Saeed<span className="text-primary">.</span></span>
             <button
               onClick={onClose}
               className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300"
@@ -84,7 +84,7 @@ const OffCanvasMenu = ({ isOpen, onClose }: OffCanvasMenuProps) => {
                 ref={(el) => { if (el) linksRef.current[i] = el; }}
                 href={link.href}
                 onClick={onClose}
-                className="group flex items-center justify-between py-4 border-b border-border text-3xl md:text-4xl font-display font-bold text-heading hover:text-primary transition-colors duration-300"
+                className="group flex items-center justify-between py-3 sm:py-4 border-b border-border text-2xl sm:text-3xl md:text-4xl font-display font-bold text-heading hover:text-primary transition-colors duration-300"
               >
                 {link.label}
                 <ArrowUpRight className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0" />
@@ -93,16 +93,16 @@ const OffCanvasMenu = ({ isOpen, onClose }: OffCanvasMenuProps) => {
           </nav>
         </div>
 
-        <div className="mt-12">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Socials</p>
-          <div className="flex flex-wrap gap-3">
+        <div className="mt-8 sm:mt-12">
+          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3 sm:mb-4">Socials</p>
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             {socials.map((s) => (
               <a
                 key={s.label}
                 href={s.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 rounded-full border border-border text-sm text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-border text-xs sm:text-sm text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300"
               >
                 {s.label}
               </a>

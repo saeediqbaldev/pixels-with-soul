@@ -25,7 +25,7 @@ const MarqueeStrip = () => {
       gsap.set(track, { x: 0 });
       gsap.to(track, {
         x: -totalWidth,
-        duration: 30,
+        duration: 60,
         ease: "none",
         repeat: -1,
         modifiers: {

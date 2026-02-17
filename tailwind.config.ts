@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Syne", "sans-serif"],
+        display: ["Cabinet Grotesk", "sans-serif"],
         body: ["Space Grotesk", "sans-serif"],
       },
       colors: {
