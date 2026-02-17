@@ -54,13 +54,13 @@ const TestimonialsSection = () => {
     testimonials.map((t, i) => (
       <div
         key={i}
-        className="flex-shrink-0 w-[85vw] sm:w-[400px] md:w-[450px] glass-card p-6 sm:p-8 flex flex-col justify-between group hover:border-primary/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_-15px_hsl(var(--primary)/0.15)]"
+        className="flex-shrink-0 w-[85vw] sm:w-[400px] md:w-[450px] glass-card p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:border-primary/30"
       >
         <div>
-          <Quote className="w-8 h-8 text-primary mb-4 group-hover:scale-110 transition-transform duration-300" />
+          <Quote className="w-8 h-8 text-primary mb-4" />
           <p className="text-sm sm:text-base text-foreground leading-relaxed font-body">"{t.text}"</p>
         </div>
-        <div className="mt-6 pt-4 border-t border-border group-hover:border-primary/30 transition-colors duration-300">
+        <div className="mt-6 pt-4 border-t border-border">
           <p className="text-base font-bold font-display text-heading">{t.name}</p>
           <p className="text-xs text-muted-foreground font-body">{t.role} — {t.company}</p>
         </div>
@@ -68,11 +68,11 @@ const TestimonialsSection = () => {
     ));
 
   return (
-    <section ref={sectionRef} id="testimonials" className="py-32 overflow-hidden">
+    <section ref={sectionRef} id="testimonials" className="py-24 sm:py-32 overflow-hidden">
       <div className="section-padding max-w-7xl mx-auto">
         <div className="testimonial-header text-center mb-16">
           <p className="text-xs uppercase tracking-[0.3em] text-primary mb-4 font-body">Testimonials</p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-display">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold font-display">
             What clients <span className="text-gradient">say</span>
           </h2>
         </div>

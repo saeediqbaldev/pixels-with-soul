@@ -31,24 +31,34 @@ const ProjectsSection = () => {
       const gap = 24;
       gsap.to(trackRef.current, {
         x: -clamped * (card.offsetWidth + gap),
-        duration: 1,
-        ease: "power3.out",
+        duration: 0.8,
+        ease: "power2.inOut",
       });
     }
   }, []);
 
-  // Auto-slide
+  // Auto-slide every 4s
   useEffect(() => {
     autoRef.current = setInterval(() => {
-      goTo(current + 1);
-    }, 1500);
+      setCurrent((prev) => {
+        const next = (prev + 1) % projects.length;
+        goTo(next);
+        return next;
+      });
+    }, 4000);
     return () => { if (autoRef.current) clearInterval(autoRef.current); };
-  }, [current, goTo]);
+  }, [goTo]);
 
   const pauseAuto = () => { if (autoRef.current) clearInterval(autoRef.current); };
   const resumeAuto = () => {
     pauseAuto();
-    autoRef.current = setInterval(() => goTo(current + 1), 1500);
+    autoRef.current = setInterval(() => {
+      setCurrent((prev) => {
+        const next = (prev + 1) % projects.length;
+        goTo(next);
+        return next;
+      });
+    }, 4000);
   };
 
   useEffect(() => {
@@ -64,33 +74,42 @@ const ProjectsSection = () => {
 
   // Touch/drag support
   const startX = useRef(0);
+  const isDragging = useRef(false);
   const handleTouchStart = (e: React.TouchEvent) => { startX.current = e.touches[0].clientX; pauseAuto(); };
   const handleTouchEnd = (e: React.TouchEvent) => {
     const diff = startX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
     resumeAuto();
   };
+  const handleMouseDown = (e: React.MouseEvent) => { isDragging.current = true; startX.current = e.clientX; pauseAuto(); };
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    const diff = startX.current - e.clientX;
+    if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
+    resumeAuto();
+  };
 
   return (
-    <section ref={sectionRef} id="projects" className="py-32 overflow-hidden">
+    <section ref={sectionRef} id="projects" className="py-24 sm:py-32 overflow-hidden">
       <div className="section-padding max-w-7xl mx-auto">
         <div className="project-header flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-primary mb-4 font-body">Portfolio</p>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-display leading-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold font-display leading-tight">
               Recent <span className="text-gradient">projects</span>
             </h2>
           </div>
           <div className="flex gap-3">
             <button
               onClick={() => { pauseAuto(); goTo(current - 1); resumeAuto(); }}
-              className="w-14 h-14 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+              className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <button
               onClick={() => { pauseAuto(); goTo(current + 1); resumeAuto(); }}
-              className="w-14 h-14 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+              className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300"
             >
               <ArrowRight className="w-5 h-5" />
             </button>
@@ -99,11 +118,13 @@ const ProjectsSection = () => {
       </div>
 
       <div
-        className="section-padding overflow-hidden"
+        className="section-padding overflow-hidden select-none"
         onMouseEnter={pauseAuto}
         onMouseLeave={resumeAuto}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
       >
         <div ref={trackRef} className="flex gap-6" style={{ willChange: "transform" }}>
           {projects.map((p, i) => (
@@ -112,19 +133,19 @@ const ProjectsSection = () => {
               href={p.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`project-card group flex-shrink-0 w-[85vw] sm:w-[70vw] md:w-[50vw] lg:w-[40vw] aspect-[4/3] border-2 transition-all duration-500 ${
+              className={`project-card group flex-shrink-0 w-[80vw] sm:w-[65vw] md:w-[50vw] lg:w-[40vw] aspect-[4/3] border-2 transition-all duration-500 ${
                 i === current ? "border-primary shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)]" : "border-transparent hover:border-primary/50"
               }`}
             >
-              <img src={p.image} alt={p.title} loading="lazy" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+              <img src={p.image} alt={p.title} loading="lazy" draggable={false} />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 md:p-8">
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
                 <p className="text-xs uppercase tracking-widest text-primary mb-2 font-body">{p.category}</p>
                 <div className="flex items-end justify-between gap-4">
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold font-display text-heading leading-snug">{p.title}</h3>
-                  <div className="w-10 h-10 flex-shrink-0 rounded-full bg-primary flex items-center justify-center text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <ArrowUpRight className="w-5 h-5" />
+                  <h3 className="text-base sm:text-lg md:text-2xl font-bold font-display text-heading leading-snug">{p.title}</h3>
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 rounded-full bg-primary flex items-center justify-center text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                 </div>
               </div>
@@ -133,7 +154,7 @@ const ProjectsSection = () => {
         </div>
       </div>
 
-      {/* Pagination - centered */}
+      {/* Centered pagination */}
       <div className="section-padding max-w-7xl mx-auto mt-8 flex justify-center">
         <div className="flex gap-2">
           {projects.map((_, i) => (
