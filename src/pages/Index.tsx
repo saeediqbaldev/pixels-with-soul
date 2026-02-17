@@ -4,19 +4,23 @@ import MarqueeStrip from "@/components/MarqueeStrip";
 import AboutSection from "@/components/AboutSection";
 import ServicesSection from "@/components/ServicesSection";
 import ProjectsSection from "@/components/ProjectsSection";
+import ProcessSection from "@/components/ProcessSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+import CustomCursor from "@/components/CustomCursor";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background cursor-none md:cursor-none">
+      <CustomCursor />
       <Header />
       <HeroSection />
       <MarqueeStrip />
       <AboutSection />
       <ServicesSection />
       <ProjectsSection />
+      <ProcessSection />
       <TestimonialsSection />
       <ContactSection />
       <MarqueeStrip />
