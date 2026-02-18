@@ -33,11 +33,14 @@ const TestimonialsSection = () => {
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
+
+    const isMobile = window.innerWidth < 768;
+
     const setupCarousel = () => {
       const totalWidth = track.scrollWidth / 2;
       tweenRef.current = gsap.to(track, {
         x: -totalWidth,
-        duration: 40,
+        duration: isMobile ? 80 : 40, // half speed on mobile
         ease: "none",
         repeat: -1,
         modifiers: { x: gsap.utils.unitize((x) => parseFloat(x) % totalWidth) },
@@ -54,7 +57,7 @@ const TestimonialsSection = () => {
     testimonials.map((t, i) => (
       <div
         key={i}
-        className="flex-shrink-0 w-[85vw] sm:w-[400px] md:w-[450px] glass-card p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:border-primary/30"
+        className="flex-shrink-0 w-[85vw] sm:w-[400px] md:w-[450px] glass-card p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:border-primary/30 hover:-translate-y-1"
       >
         <div>
           <Quote className="w-8 h-8 text-primary mb-4" />

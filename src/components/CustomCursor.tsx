@@ -1,9 +1,19 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
 
 const CustomCursor = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
   const followerRef = useRef<HTMLDivElement>(null);
+
+  const resetCursor = useCallback(() => {
+    const cursor = cursorRef.current;
+    const follower = followerRef.current;
+    if (!cursor || !follower) return;
+    cursor.style.background = "hsl(var(--primary))";
+    follower.style.borderColor = "hsl(var(--primary))";
+    gsap.to(follower, { scale: 1, opacity: 1, duration: 0.3 });
+    gsap.to(cursor, { scale: 1, duration: 0.3 });
+  }, []);
 
   useEffect(() => {
     const cursor = cursorRef.current;
@@ -15,53 +25,49 @@ const CustomCursor = () => {
       gsap.to(follower, { x: e.clientX, y: e.clientY, duration: 0.35, ease: "power2.out" });
     };
 
-    const getElementBg = (el: Element): string => {
-      const style = window.getComputedStyle(el);
-      const bg = style.backgroundColor;
-      // Check for green-ish (primary) background
-      const match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-      if (match) {
-        const [, r, g, b] = match.map(Number);
-        // Green/primary button
-        if (g > 150 && g > r && g > b) return "green";
-        // White/light
-        if (r > 200 && g > 200 && b > 200) return "white";
-        // Dark/black
-        if (r < 50 && g < 50 && b < 50) return "dark";
-      }
-      // Check classes for common patterns
-      if (el.classList.contains("bg-primary") || el.closest(".bg-primary")) return "green";
-      // Check for border-only (outlined) buttons
-      const parent = el.closest("a, button");
-      if (parent) {
-        const pStyle = window.getComputedStyle(parent);
-        const pBg = pStyle.backgroundColor;
-        const pMatch = pBg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-        if (pMatch) {
-          const [, r, g, b] = pMatch.map(Number);
-          if (g > 150 && g > r && g > b) return "green";
+    const detectBgType = (el: Element): "green" | "white" | "dark" => {
+      let current: Element | null = el;
+      while (current && current !== document.body) {
+        // Check for explicit data attribute
+        const attr = current.getAttribute("data-cursor-bg");
+        if (attr === "green" || attr === "white" || attr === "dark") return attr;
+
+        // Check classes
+        if (current.classList.contains("bg-primary")) return "green";
+
+        // Check computed bg
+        const bg = window.getComputedStyle(current).backgroundColor;
+        const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        if (m) {
+          const [r, g, b] = [+m[1], +m[2], +m[3]];
+          if (g > 140 && g > r * 1.2 && g > b * 1.2) return "green";
           if (r > 200 && g > 200 && b > 200) return "white";
+          if (r < 60 && g < 60 && b < 60 && bg !== "rgba(0, 0, 0, 0)") return "dark";
         }
+        current = current.parentElement;
       }
       return "dark";
     };
 
     const grow = (e: Event) => {
-      const target = e.currentTarget as Element;
-      const bgType = getElementBg(target);
+      const target = (e.currentTarget || e.target) as Element;
+      const bg = detectBgType(target);
 
       let dotColor: string;
       let ringColor: string;
 
-      if (bgType === "green") {
-        dotColor = "hsl(0 0% 5%)";
-        ringColor = "hsl(0 0% 5%)";
-      } else if (bgType === "white") {
-        dotColor = "hsl(0 0% 5%)";
-        ringColor = "hsl(var(--primary))";
-      } else {
-        dotColor = "hsl(var(--primary))";
-        ringColor = "hsl(var(--primary))";
+      switch (bg) {
+        case "green":
+          dotColor = "hsl(0 0% 5%)";
+          ringColor = "hsl(0 0% 5%)";
+          break;
+        case "white":
+          dotColor = "hsl(0 0% 5%)";
+          ringColor = "hsl(var(--primary))";
+          break;
+        default: // dark
+          dotColor = "hsl(var(--primary))";
+          ringColor = "hsl(var(--primary))";
       }
 
       cursor.style.background = dotColor;
@@ -70,29 +76,40 @@ const CustomCursor = () => {
       gsap.to(cursor, { scale: 0, duration: 0.3 });
     };
 
-    const shrink = () => {
-      cursor.style.background = "hsl(var(--primary))";
-      follower.style.borderColor = "hsl(var(--primary))";
-      gsap.to(follower, { scale: 1, opacity: 1, duration: 0.3 });
-      gsap.to(cursor, { scale: 1, duration: 0.3 });
-    };
+    const shrink = () => resetCursor();
 
     window.addEventListener("mousemove", moveCursor);
 
-    const interactives = document.querySelectorAll("a, button, [role='button'], input, textarea, .project-card");
-    interactives.forEach((el) => {
-      el.addEventListener("mouseenter", grow);
-      el.addEventListener("mouseleave", shrink);
+    const bindInteractives = () => {
+      const interactives = document.querySelectorAll("a, button, [role='button'], input, textarea, .project-card");
+      interactives.forEach((el) => {
+        el.addEventListener("mouseenter", grow);
+        el.addEventListener("mouseleave", shrink);
+      });
+      return interactives;
+    };
+
+    let interactives = bindInteractives();
+
+    // Re-bind on DOM changes (dynamic content)
+    const observer = new MutationObserver(() => {
+      interactives.forEach((el) => {
+        el.removeEventListener("mouseenter", grow);
+        el.removeEventListener("mouseleave", shrink);
+      });
+      interactives = bindInteractives();
     });
+    observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       window.removeEventListener("mousemove", moveCursor);
+      observer.disconnect();
       interactives.forEach((el) => {
         el.removeEventListener("mouseenter", grow);
         el.removeEventListener("mouseleave", shrink);
       });
     };
-  }, []);
+  }, [resetCursor]);
 
   return (
     <>

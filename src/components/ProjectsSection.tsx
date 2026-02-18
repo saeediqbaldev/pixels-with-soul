@@ -10,14 +10,14 @@ import project4 from "@/assets/project-4.jpg";
 gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
-  { title: "Cameronpink Job Listing", category: "Job Platform", image: project4, url: "https://cameronpink.com" },
-  { title: "DNB Music Academy", category: "Education", image: project2, url: "https://dnbacademy.net" },
-  { title: "Mini Perfumesps Store", category: "E-Commerce", image: project3, url: "https://miniperfumesps.com" },
-  { title: "EcoLiquidators", category: "Business", image: project1, url: "https://ecoliquidators.com" },
-  { title: "Cameronpink Redesign", category: "Job Platform", image: project4, url: "https://cameronpink.com" },
-  { title: "DNB Academy Pro", category: "Education", image: project2, url: "https://dnbacademy.net" },
-  { title: "Mini Perfumes Global", category: "E-Commerce", image: project3, url: "https://miniperfumesps.com" },
-  { title: "EcoLiquidators Plus", category: "Business", image: project1, url: "https://ecoliquidators.com" },
+  { title: "Cameronpink Job Listing", category: "Job Platform", image: project4, url: "https://cameronpink.com", info: "A modern job listing platform with advanced filtering, responsive design and seamless employer dashboards." },
+  { title: "DNB Music Academy", category: "Education", image: project2, url: "https://dnbacademy.net", info: "Full-featured music education platform with course enrollment, student portals, and integrated payment systems." },
+  { title: "Mini Perfumesps Store", category: "E-Commerce", image: project3, url: "https://miniperfumesps.com", info: "High-converting e-commerce store with product galleries, cart system, and secure checkout integration." },
+  { title: "EcoLiquidators", category: "Business", image: project1, url: "https://ecoliquidators.com", info: "Corporate business website with inventory management, quote request systems, and optimized SEO." },
+  { title: "Cameronpink Redesign", category: "Job Platform", image: project4, url: "https://cameronpink.com", info: "Complete UI/UX overhaul with improved accessibility, faster load times, and mobile-first approach." },
+  { title: "DNB Academy Pro", category: "Education", image: project2, url: "https://dnbacademy.net", info: "Premium tier with live streaming classes, progress tracking dashboards, and community features." },
+  { title: "Mini Perfumes Global", category: "E-Commerce", image: project3, url: "https://miniperfumesps.com", info: "International expansion with multi-currency support, localized content, and global shipping integration." },
+  { title: "EcoLiquidators Plus", category: "Business", image: project1, url: "https://ecoliquidators.com", info: "Enhanced platform with real-time inventory sync, automated reporting, and CRM integration." },
 ];
 
 const ProjectsSection = () => {
@@ -35,13 +35,12 @@ const ProjectsSection = () => {
       const gap = 24;
       gsap.to(trackRef.current, {
         x: -clamped * (card.offsetWidth + gap),
-        duration: 1,
-        ease: "power2.inOut",
+        duration: 1.2,
+        ease: "power3.inOut",
       });
     }
   }, []);
 
-  // Auto-slide
   const startAuto = useCallback(() => {
     if (autoRef.current) clearInterval(autoRef.current);
     autoRef.current = setInterval(() => {
@@ -50,7 +49,7 @@ const ProjectsSection = () => {
         goTo(next);
         return next;
       });
-    }, 4000);
+    }, 5000);
   }, [goTo]);
 
   const pauseAuto = () => { if (autoRef.current) clearInterval(autoRef.current); };
@@ -80,12 +79,16 @@ const ProjectsSection = () => {
     if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
     startAuto();
   };
-  const handleMouseDown = (e: React.MouseEvent) => { isDragging.current = true; startX.current = e.clientX; pauseAuto(); };
+  const handleMouseDown = (e: React.MouseEvent) => { isDragging.current = true; startX.current = e.clientX; pauseAuto(); e.preventDefault(); };
   const handleMouseUp = (e: React.MouseEvent) => {
     if (!isDragging.current) return;
     isDragging.current = false;
     const diff = startX.current - e.clientX;
     if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
+    startAuto();
+  };
+  const handleMouseLeaveTrack = () => {
+    if (isDragging.current) isDragging.current = false;
     startAuto();
   };
 
@@ -116,40 +119,54 @@ const ProjectsSection = () => {
         </div>
       </div>
 
-      <div
-        className="section-padding overflow-hidden select-none"
-        onMouseEnter={pauseAuto}
-        onMouseLeave={startAuto}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-      >
-        <div ref={trackRef} className="flex gap-6" style={{ willChange: "transform" }}>
-          {projects.map((p, i) => (
-            <a
-              key={i}
-              href={p.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`project-card group flex-shrink-0 w-[85vw] sm:w-[65vw] md:w-[50vw] lg:w-[40vw] aspect-[4/3] border-2 transition-all duration-500 ${
-                i === current ? "border-primary shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)]" : "border-transparent hover:border-primary/50"
-              }`}
-            >
-              <img src={p.image} alt={p.title} loading="lazy" draggable={false} />
-              {/* Default gradient overlay for readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
-                <p className="text-xs uppercase tracking-widest text-primary mb-2 font-body">{p.category}</p>
-                <div className="flex items-end justify-between gap-4">
-                  <h3 className="text-base sm:text-lg md:text-2xl font-bold font-display text-heading leading-snug">{p.title}</h3>
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 rounded-full bg-primary flex items-center justify-center text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
+      {/* Fade edges */}
+      <div className="relative">
+        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+
+        <div
+          className="section-padding overflow-hidden select-none"
+          onMouseEnter={pauseAuto}
+          onMouseLeave={handleMouseLeaveTrack}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+        >
+          <div ref={trackRef} className="flex gap-6" style={{ willChange: "transform" }}>
+            {projects.map((p, i) => (
+              <a
+                key={i}
+                href={p.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`project-card group flex-shrink-0 w-[85vw] sm:w-[65vw] md:w-[50vw] lg:w-[40vw] aspect-[4/3] border-2 transition-all duration-500 ${
+                  i === current ? "border-primary shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)]" : "border-transparent hover:border-primary/50"
+                }`}
+                onClick={(e) => { if (isDragging.current) e.preventDefault(); }}
+              >
+                <img src={p.image} alt={p.title} loading="lazy" draggable={false} />
+                {/* Default gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                {/* Hover gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
+                  <p className="text-xs uppercase tracking-widest text-primary mb-2 font-body">{p.category}</p>
+                  <h3 className="text-base sm:text-lg md:text-2xl font-bold font-display text-heading leading-snug mb-0 group-hover:mb-2 transition-all duration-300">{p.title}</h3>
+                  {/* Info text - visible only on hover */}
+                  <p className="text-xs sm:text-sm text-muted-foreground font-body leading-relaxed max-h-0 overflow-hidden opacity-0 group-hover:max-h-24 group-hover:opacity-100 transition-all duration-500">
+                    {p.info}
+                  </p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 rounded-full bg-primary flex items-center justify-center text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </a>
-          ))}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
 
