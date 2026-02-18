@@ -14,6 +14,10 @@ const projects = [
   { title: "DNB Music Academy", category: "Education", image: project2, url: "https://dnbacademy.net" },
   { title: "Mini Perfumesps Store", category: "E-Commerce", image: project3, url: "https://miniperfumesps.com" },
   { title: "EcoLiquidators", category: "Business", image: project1, url: "https://ecoliquidators.com" },
+  { title: "Cameronpink Redesign", category: "Job Platform", image: project4, url: "https://cameronpink.com" },
+  { title: "DNB Academy Pro", category: "Education", image: project2, url: "https://dnbacademy.net" },
+  { title: "Mini Perfumes Global", category: "E-Commerce", image: project3, url: "https://miniperfumesps.com" },
+  { title: "EcoLiquidators Plus", category: "Business", image: project1, url: "https://ecoliquidators.com" },
 ];
 
 const ProjectsSection = () => {
@@ -31,14 +35,15 @@ const ProjectsSection = () => {
       const gap = 24;
       gsap.to(trackRef.current, {
         x: -clamped * (card.offsetWidth + gap),
-        duration: 0.8,
+        duration: 1,
         ease: "power2.inOut",
       });
     }
   }, []);
 
-  // Auto-slide every 4s
-  useEffect(() => {
+  // Auto-slide
+  const startAuto = useCallback(() => {
+    if (autoRef.current) clearInterval(autoRef.current);
     autoRef.current = setInterval(() => {
       setCurrent((prev) => {
         const next = (prev + 1) % projects.length;
@@ -46,20 +51,14 @@ const ProjectsSection = () => {
         return next;
       });
     }, 4000);
-    return () => { if (autoRef.current) clearInterval(autoRef.current); };
   }, [goTo]);
 
   const pauseAuto = () => { if (autoRef.current) clearInterval(autoRef.current); };
-  const resumeAuto = () => {
-    pauseAuto();
-    autoRef.current = setInterval(() => {
-      setCurrent((prev) => {
-        const next = (prev + 1) % projects.length;
-        goTo(next);
-        return next;
-      });
-    }, 4000);
-  };
+
+  useEffect(() => {
+    startAuto();
+    return () => pauseAuto();
+  }, [startAuto]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -72,14 +71,14 @@ const ProjectsSection = () => {
     return () => ctx.revert();
   }, []);
 
-  // Touch/drag support
+  // Touch/drag
   const startX = useRef(0);
   const isDragging = useRef(false);
   const handleTouchStart = (e: React.TouchEvent) => { startX.current = e.touches[0].clientX; pauseAuto(); };
   const handleTouchEnd = (e: React.TouchEvent) => {
     const diff = startX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
-    resumeAuto();
+    startAuto();
   };
   const handleMouseDown = (e: React.MouseEvent) => { isDragging.current = true; startX.current = e.clientX; pauseAuto(); };
   const handleMouseUp = (e: React.MouseEvent) => {
@@ -87,7 +86,7 @@ const ProjectsSection = () => {
     isDragging.current = false;
     const diff = startX.current - e.clientX;
     if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
-    resumeAuto();
+    startAuto();
   };
 
   return (
@@ -102,13 +101,13 @@ const ProjectsSection = () => {
           </div>
           <div className="flex gap-3">
             <button
-              onClick={() => { pauseAuto(); goTo(current - 1); resumeAuto(); }}
+              onClick={() => { pauseAuto(); goTo(current - 1); startAuto(); }}
               className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <button
-              onClick={() => { pauseAuto(); goTo(current + 1); resumeAuto(); }}
+              onClick={() => { pauseAuto(); goTo(current + 1); startAuto(); }}
               className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300"
             >
               <ArrowRight className="w-5 h-5" />
@@ -120,7 +119,7 @@ const ProjectsSection = () => {
       <div
         className="section-padding overflow-hidden select-none"
         onMouseEnter={pauseAuto}
-        onMouseLeave={resumeAuto}
+        onMouseLeave={startAuto}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         onMouseDown={handleMouseDown}
@@ -133,13 +132,13 @@ const ProjectsSection = () => {
               href={p.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`project-card group flex-shrink-0 w-[80vw] sm:w-[65vw] md:w-[50vw] lg:w-[40vw] aspect-[4/3] border-2 transition-all duration-500 ${
+              className={`project-card group flex-shrink-0 w-[85vw] sm:w-[65vw] md:w-[50vw] lg:w-[40vw] aspect-[4/3] border-2 transition-all duration-500 ${
                 i === current ? "border-primary shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)]" : "border-transparent hover:border-primary/50"
               }`}
             >
               <img src={p.image} alt={p.title} loading="lazy" draggable={false} />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              {/* Default gradient overlay for readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
                 <p className="text-xs uppercase tracking-widest text-primary mb-2 font-body">{p.category}</p>
                 <div className="flex items-end justify-between gap-4">
@@ -160,9 +159,9 @@ const ProjectsSection = () => {
           {projects.map((_, i) => (
             <button
               key={i}
-              onClick={() => { pauseAuto(); goTo(i); resumeAuto(); }}
+              onClick={() => { pauseAuto(); goTo(i); startAuto(); }}
               className={`h-1 rounded-full transition-all duration-500 ${
-                i === current ? "w-12 bg-primary" : "w-6 bg-border"
+                i === current ? "w-10 bg-primary" : "w-4 bg-border"
               }`}
             />
           ))}

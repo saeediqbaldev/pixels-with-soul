@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Mail, Phone, MapPin, Send, MessageCircle } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,11 +14,7 @@ const ContactSection = () => {
         ".contact-anim",
         { y: 60, opacity: 0 },
         {
-          y: 0,
-          opacity: 1,
-          stagger: 0.15,
-          duration: 0.8,
-          ease: "power3.out",
+          y: 0, opacity: 1, stagger: 0.15, duration: 0.8, ease: "power3.out",
           scrollTrigger: { trigger: sectionRef.current, start: "top 75%" },
         }
       );
@@ -27,43 +23,54 @@ const ContactSection = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} id="contact" className="py-32 section-padding">
+    <section ref={sectionRef} id="contact" className="py-24 sm:py-32 section-padding">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
           {/* Info */}
           <div>
             <p className="contact-anim text-xs uppercase tracking-[0.3em] text-primary mb-4 font-body">Get In Touch</p>
-            <h2 className="contact-anim text-4xl md:text-5xl lg:text-6xl font-extrabold font-display leading-tight mb-8">
+            <h2 className="contact-anim text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold font-display leading-tight mb-8">
               Let's work <span className="text-gradient">together</span>
             </h2>
-            <p className="contact-anim text-lg text-muted-foreground mb-12 font-body leading-relaxed">
+            <p className="contact-anim text-base sm:text-lg text-muted-foreground mb-10 font-body leading-relaxed">
               Ready to elevate your online presence? Let's achieve remarkable results for your business.
             </p>
 
-            <div className="space-y-6">
+            <div className="space-y-5">
               <a
                 href="tel:+923049297788"
                 className="contact-anim flex items-center gap-4 text-foreground hover:text-primary transition-colors duration-300 group"
               >
-                <div className="w-12 h-12 rounded-full bg-surface flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                  <Phone className="w-5 h-5" />
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-surface flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                  <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <span className="font-body">+92 304 929 7788</span>
+                <span className="font-body text-sm sm:text-base">+92 304 929 7788</span>
+              </a>
+              <a
+                href="https://wa.me/923049297788"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-anim flex items-center gap-4 text-foreground hover:text-primary transition-colors duration-300 group"
+              >
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-surface flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                  <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                <span className="font-body text-sm sm:text-base">WhatsApp</span>
               </a>
               <a
                 href="mailto:freelancersaeedofficial@gmail.com"
                 className="contact-anim flex items-center gap-4 text-foreground hover:text-primary transition-colors duration-300 group"
               >
-                <div className="w-12 h-12 rounded-full bg-surface flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                  <Mail className="w-5 h-5" />
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-surface flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                  <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <span className="font-body">freelancersaeedofficial@gmail.com</span>
+                <span className="font-body text-sm sm:text-base break-all">freelancersaeedofficial@gmail.com</span>
               </a>
               <div className="contact-anim flex items-center gap-4 text-foreground">
-                <div className="w-12 h-12 rounded-full bg-surface flex items-center justify-center">
-                  <MapPin className="w-5 h-5" />
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-surface flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <span className="font-body">Swabi City, KPK — Pakistan</span>
+                <span className="font-body text-sm sm:text-base">Swabi City, KPK — Pakistan</span>
               </div>
             </div>
           </div>
@@ -71,12 +78,10 @@ const ContactSection = () => {
           {/* Form */}
           <form
             onSubmit={(e) => e.preventDefault()}
-            className="contact-anim glass-card p-8 md:p-10 space-y-6"
+            className="contact-anim glass-card p-6 sm:p-8 md:p-10 space-y-6"
           >
             <div>
-              <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block font-body">
-                Name
-              </label>
+              <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block font-body">Name</label>
               <input
                 type="text"
                 className="w-full bg-transparent border-b border-border py-3 text-foreground font-body focus:outline-none focus:border-primary transition-colors duration-300"
@@ -84,9 +89,7 @@ const ContactSection = () => {
               />
             </div>
             <div>
-              <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block font-body">
-                Email
-              </label>
+              <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block font-body">Email</label>
               <input
                 type="email"
                 className="w-full bg-transparent border-b border-border py-3 text-foreground font-body focus:outline-none focus:border-primary transition-colors duration-300"
@@ -94,9 +97,7 @@ const ContactSection = () => {
               />
             </div>
             <div>
-              <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block font-body">
-                Subject
-              </label>
+              <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block font-body">Subject</label>
               <input
                 type="text"
                 className="w-full bg-transparent border-b border-border py-3 text-foreground font-body focus:outline-none focus:border-primary transition-colors duration-300"
@@ -104,9 +105,7 @@ const ContactSection = () => {
               />
             </div>
             <div>
-              <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block font-body">
-                Message
-              </label>
+              <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block font-body">Message</label>
               <textarea
                 rows={4}
                 className="w-full bg-transparent border-b border-border py-3 text-foreground font-body focus:outline-none focus:border-primary transition-colors duration-300 resize-none"
