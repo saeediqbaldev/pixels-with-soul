@@ -25,17 +25,20 @@ const CustomCursor = () => {
       gsap.to(follower, { x: e.clientX, y: e.clientY, duration: 0.35, ease: "power2.out" });
     };
 
+    /**
+     * Detect what kind of background the element sits on.
+     * Priority:
+     *  1. data-cursor-bg attribute on the element or any ancestor
+     *  2. Computed background color walk
+     */
     const detectBgType = (el: Element): "green" | "white" | "dark" => {
       let current: Element | null = el;
       while (current && current !== document.body) {
-        // Check for explicit data attribute
         const attr = current.getAttribute("data-cursor-bg");
         if (attr === "green" || attr === "white" || attr === "dark") return attr;
 
-        // Check classes
         if (current.classList.contains("bg-primary")) return "green";
 
-        // Check computed bg
         const bg = window.getComputedStyle(current).backgroundColor;
         const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
         if (m) {
@@ -58,14 +61,17 @@ const CustomCursor = () => {
 
       switch (bg) {
         case "green":
+          // Green BG → black dot, black ring
           dotColor = "hsl(0 0% 5%)";
           ringColor = "hsl(0 0% 5%)";
           break;
         case "white":
+          // White BG → black dot, black ring
           dotColor = "hsl(0 0% 5%)";
-          ringColor = "hsl(var(--primary))";
+          ringColor = "hsl(0 0% 5%)";
           break;
-        default: // dark
+        default:
+          // Dark BG → green dot, green ring
           dotColor = "hsl(var(--primary))";
           ringColor = "hsl(var(--primary))";
       }
@@ -91,7 +97,6 @@ const CustomCursor = () => {
 
     let interactives = bindInteractives();
 
-    // Re-bind on DOM changes (dynamic content)
     const observer = new MutationObserver(() => {
       interactives.forEach((el) => {
         el.removeEventListener("mouseenter", grow);
