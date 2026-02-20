@@ -1,3 +1,4 @@
+import { useState, useCallback } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import MarqueeStrip from "@/components/MarqueeStrip";
@@ -10,10 +11,18 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
+import Preloader from "@/components/Preloader";
 
 const Index = () => {
+  const [loading, setLoading] = useState(true);
+
+  const handlePreloaderComplete = useCallback(() => {
+    setLoading(false);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background cursor-none md:cursor-none">
+      {loading && <Preloader onComplete={handlePreloaderComplete} />}
       <CustomCursor />
       <Header />
       <HeroSection />
