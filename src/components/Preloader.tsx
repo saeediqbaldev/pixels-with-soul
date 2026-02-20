@@ -8,7 +8,6 @@ const Preloader = ({ onComplete }: { onComplete: () => void }) => {
   useEffect(() => {
     const letters = lettersRef.current;
 
-    // Infinite wavy animation on letters
     const waveTl = gsap.timeline({ repeat: -1, yoyo: true });
     waveTl.fromTo(
       letters,
@@ -16,38 +15,24 @@ const Preloader = ({ onComplete }: { onComplete: () => void }) => {
       { y: -18, stagger: { each: 0.08, from: "start" }, duration: 0.6, ease: "sine.inOut" }
     );
 
-    // Exit after 2.5s
     const exitTl = gsap.timeline({ delay: 2.5, onComplete });
     exitTl
       .to(letters, { scale: 1.1, duration: 0.3, ease: "power2.in" })
       .to(containerRef.current, { yPercent: -100, duration: 0.8, ease: "power4.inOut" });
 
-    return () => {
-      waveTl.kill();
-      exitTl.kill();
-    };
+    return () => { waveTl.kill(); exitTl.kill(); };
   }, [onComplete]);
 
-  const logoText = "Saeed Iqbal";
+  const logoText = "Saeed";
   const setLetterRef = (el: HTMLSpanElement | null, i: number) => {
     if (el) lettersRef.current[i] = el;
   };
 
   return (
-    <div
-      ref={containerRef}
-      className="fixed inset-0 z-[10000] flex items-center justify-center bg-background"
-    >
+    <div ref={containerRef} className="fixed inset-0 z-[10000] flex items-center justify-center bg-background">
       <h1 className="text-5xl sm:text-7xl md:text-8xl font-extrabold font-display text-heading tracking-tight select-none">
         {logoText.split("").map((char, i) => (
-          <span
-            key={i}
-            ref={(el) => setLetterRef(el, i)}
-            className="inline-block"
-            style={{ whiteSpace: char === " " ? "pre" : undefined }}
-          >
-            {char === " " ? "\u00A0" : char}
-          </span>
+          <span key={i} ref={(el) => setLetterRef(el, i)} className="inline-block">{char}</span>
         ))}
         <span className="text-primary inline-block">.</span>
       </h1>
