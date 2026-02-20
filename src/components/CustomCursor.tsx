@@ -1,27 +1,38 @@
 import { useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
 
+const ARROW_SVG = `<svg width="28" height="34" viewBox="0 0 28 34" fill="none" xmlns="http://www.w3.org/2000/svg"><path class="cursor-outer" d="M2 1L26 16.5L15.5 18.5L10 32L2 1Z" fill="hsl(0,0%,95%)"/><path class="cursor-inner" d="M4.5 4.5L23 16L14.5 17.5L10 29L4.5 4.5Z" fill="hsl(82,85%,55%)"/></svg>`;
+
 const CustomCursor = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
+  const followerRef = useRef<HTMLDivElement>(null);
+  const arrowRef = useRef<HTMLDivElement>(null);
+  const isHoveringButton = useRef(false);
 
   const resetCursor = useCallback(() => {
     const cursor = cursorRef.current;
-    if (!cursor) return;
-    const svg = cursor.querySelector("svg");
-    if (!svg) return;
-    const inner = svg.querySelector(".cursor-inner") as SVGPathElement;
-    const outer = svg.querySelector(".cursor-outer") as SVGPathElement;
-    if (inner) inner.setAttribute("fill", "hsl(82, 85%, 55%)");
-    if (outer) outer.setAttribute("fill", "hsl(0, 0%, 95%)");
-    gsap.to(cursor, { scale: 1, duration: 0.3 });
+    const follower = followerRef.current;
+    const arrow = arrowRef.current;
+    if (!cursor || !follower || !arrow) return;
+    isHoveringButton.current = false;
+    // Show dot+ring, hide arrow
+    gsap.to(cursor, { scale: 1, opacity: 1, duration: 0.25 });
+    gsap.to(follower, { scale: 1, opacity: 1, duration: 0.25 });
+    gsap.to(arrow, { scale: 0, opacity: 0, duration: 0.2 });
+    cursor.style.background = "hsl(var(--primary))";
+    follower.style.borderColor = "hsl(var(--primary))";
   }, []);
 
   useEffect(() => {
     const cursor = cursorRef.current;
-    if (!cursor) return;
+    const follower = followerRef.current;
+    const arrow = arrowRef.current;
+    if (!cursor || !follower || !arrow) return;
 
     const moveCursor = (e: MouseEvent) => {
-      gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.15, ease: "power2.out" });
+      gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
+      gsap.to(follower, { x: e.clientX, y: e.clientY, duration: 0.35, ease: "power2.out" });
+      gsap.to(arrow, { x: e.clientX, y: e.clientY, duration: 0.12, ease: "power2.out" });
     };
 
     const detectBgType = (el: Element): "green" | "white" | "dark" => {
@@ -43,52 +54,54 @@ const CustomCursor = () => {
       return "dark";
     };
 
-    const grow = (e: Event) => {
+    const showArrow = (e: Event) => {
       const target = (e.currentTarget || e.target) as Element;
       const bg = detectBgType(target);
-      const svg = cursor.querySelector("svg");
-      if (!svg) return;
-      const inner = svg.querySelector(".cursor-inner") as SVGPathElement;
-      const outer = svg.querySelector(".cursor-outer") as SVGPathElement;
+      isHoveringButton.current = true;
+
+      // Hide dot+ring
+      gsap.to(cursor, { scale: 0, opacity: 0, duration: 0.2 });
+      gsap.to(follower, { scale: 0, opacity: 0, duration: 0.2 });
+      // Show arrow
+      gsap.to(arrow, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(1.7)" });
+
+      const inner = arrow.querySelector(".cursor-inner") as SVGPathElement | null;
+      const outer = arrow.querySelector(".cursor-outer") as SVGPathElement | null;
 
       switch (bg) {
         case "green":
-          // On green: black arrow, white outline
-          if (inner) inner.setAttribute("fill", "hsl(0, 0%, 5%)");
-          if (outer) outer.setAttribute("fill", "hsl(0, 0%, 95%)");
+          if (inner) inner.setAttribute("fill", "hsl(0,0%,5%)");
+          if (outer) outer.setAttribute("fill", "hsl(0,0%,95%)");
           break;
         case "white":
-          // On white: black arrow, black outline
-          if (inner) inner.setAttribute("fill", "hsl(0, 0%, 5%)");
-          if (outer) outer.setAttribute("fill", "hsl(0, 0%, 20%)");
+          if (inner) inner.setAttribute("fill", "hsl(0,0%,5%)");
+          if (outer) outer.setAttribute("fill", "hsl(0,0%,20%)");
           break;
         default:
-          // On dark: green arrow, white outline
-          if (inner) inner.setAttribute("fill", "hsl(82, 85%, 55%)");
-          if (outer) outer.setAttribute("fill", "hsl(0, 0%, 95%)");
+          if (inner) inner.setAttribute("fill", "hsl(82,85%,55%)");
+          if (outer) outer.setAttribute("fill", "hsl(0,0%,95%)");
       }
-      gsap.to(cursor, { scale: 1.3, duration: 0.3, ease: "back.out(1.7)" });
     };
 
-    const shrink = () => resetCursor();
+    const hideArrow = () => resetCursor();
 
     window.addEventListener("mousemove", moveCursor);
 
     const bindInteractives = () => {
-      const interactives = document.querySelectorAll("a, button, [role='button'], input, textarea, .project-card");
-      interactives.forEach((el) => {
-        el.addEventListener("mouseenter", grow);
-        el.addEventListener("mouseleave", shrink);
+      const buttons = document.querySelectorAll("a, button, [role='button']");
+      buttons.forEach((el) => {
+        el.addEventListener("mouseenter", showArrow);
+        el.addEventListener("mouseleave", hideArrow);
       });
-      return interactives;
+      return buttons;
     };
 
     let interactives = bindInteractives();
 
     const observer = new MutationObserver(() => {
       interactives.forEach((el) => {
-        el.removeEventListener("mouseenter", grow);
-        el.removeEventListener("mouseleave", shrink);
+        el.removeEventListener("mouseenter", showArrow);
+        el.removeEventListener("mouseleave", hideArrow);
       });
       interactives = bindInteractives();
     });
@@ -98,35 +111,32 @@ const CustomCursor = () => {
       window.removeEventListener("mousemove", moveCursor);
       observer.disconnect();
       interactives.forEach((el) => {
-        el.removeEventListener("mouseenter", grow);
-        el.removeEventListener("mouseleave", shrink);
+        el.removeEventListener("mouseenter", showArrow);
+        el.removeEventListener("mouseleave", hideArrow);
       });
     };
   }, [resetCursor]);
 
   return (
-    <div
-      ref={cursorRef}
-      className="fixed top-0 left-0 pointer-events-none z-[9999] hidden md:block"
-      style={{ marginLeft: "-4px", marginTop: "-2px" }}
-    >
-      <svg width="28" height="34" viewBox="0 0 28 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Outer stroke / border */}
-        <path
-          className="cursor-outer"
-          d="M2 1L26 16.5L15.5 18.5L10 32L2 1Z"
-          fill="hsl(0, 0%, 95%)"
-          stroke="none"
-        />
-        {/* Inner fill */}
-        <path
-          className="cursor-inner"
-          d="M4.5 4.5L23 16L14.5 17.5L10 29L4.5 4.5Z"
-          fill="hsl(82, 85%, 55%)"
-          stroke="none"
-        />
-      </svg>
-    </div>
+    <>
+      {/* Default dot */}
+      <div
+        ref={cursorRef}
+        className="fixed top-0 left-0 w-3 h-3 rounded-full bg-primary pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 hidden md:block"
+      />
+      {/* Default ring */}
+      <div
+        ref={followerRef}
+        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-primary pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 hidden md:block"
+      />
+      {/* Arrow cursor (hidden by default) */}
+      <div
+        ref={arrowRef}
+        className="fixed top-0 left-0 pointer-events-none z-[9999] hidden md:block"
+        style={{ marginLeft: "-4px", marginTop: "-2px", transform: "scale(0)", opacity: 0 }}
+        dangerouslySetInnerHTML={{ __html: ARROW_SVG }}
+      />
+    </>
   );
 };
 
