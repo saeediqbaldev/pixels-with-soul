@@ -3,42 +3,33 @@ import gsap from "gsap";
 
 const CustomCursor = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
-  const followerRef = useRef<HTMLDivElement>(null);
 
   const resetCursor = useCallback(() => {
     const cursor = cursorRef.current;
-    const follower = followerRef.current;
-    if (!cursor || !follower) return;
-    cursor.style.background = "hsl(var(--primary))";
-    follower.style.borderColor = "hsl(var(--primary))";
-    gsap.to(follower, { scale: 1, opacity: 1, duration: 0.3 });
+    if (!cursor) return;
+    const svg = cursor.querySelector("svg");
+    if (!svg) return;
+    const inner = svg.querySelector(".cursor-inner") as SVGPathElement;
+    const outer = svg.querySelector(".cursor-outer") as SVGPathElement;
+    if (inner) inner.setAttribute("fill", "hsl(82, 85%, 55%)");
+    if (outer) outer.setAttribute("fill", "hsl(0, 0%, 95%)");
     gsap.to(cursor, { scale: 1, duration: 0.3 });
   }, []);
 
   useEffect(() => {
     const cursor = cursorRef.current;
-    const follower = followerRef.current;
-    if (!cursor || !follower) return;
+    if (!cursor) return;
 
     const moveCursor = (e: MouseEvent) => {
-      gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
-      gsap.to(follower, { x: e.clientX, y: e.clientY, duration: 0.35, ease: "power2.out" });
+      gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.15, ease: "power2.out" });
     };
 
-    /**
-     * Detect what kind of background the element sits on.
-     * Priority:
-     *  1. data-cursor-bg attribute on the element or any ancestor
-     *  2. Computed background color walk
-     */
     const detectBgType = (el: Element): "green" | "white" | "dark" => {
       let current: Element | null = el;
       while (current && current !== document.body) {
         const attr = current.getAttribute("data-cursor-bg");
         if (attr === "green" || attr === "white" || attr === "dark") return attr;
-
         if (current.classList.contains("bg-primary")) return "green";
-
         const bg = window.getComputedStyle(current).backgroundColor;
         const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
         if (m) {
@@ -55,31 +46,28 @@ const CustomCursor = () => {
     const grow = (e: Event) => {
       const target = (e.currentTarget || e.target) as Element;
       const bg = detectBgType(target);
-
-      let dotColor: string;
-      let ringColor: string;
+      const svg = cursor.querySelector("svg");
+      if (!svg) return;
+      const inner = svg.querySelector(".cursor-inner") as SVGPathElement;
+      const outer = svg.querySelector(".cursor-outer") as SVGPathElement;
 
       switch (bg) {
         case "green":
-          // Green BG → black dot, black ring
-          dotColor = "hsl(0 0% 5%)";
-          ringColor = "hsl(0 0% 5%)";
+          // On green: black arrow, white outline
+          if (inner) inner.setAttribute("fill", "hsl(0, 0%, 5%)");
+          if (outer) outer.setAttribute("fill", "hsl(0, 0%, 95%)");
           break;
         case "white":
-          // White BG → black dot, black ring
-          dotColor = "hsl(0 0% 5%)";
-          ringColor = "hsl(0 0% 5%)";
+          // On white: black arrow, black outline
+          if (inner) inner.setAttribute("fill", "hsl(0, 0%, 5%)");
+          if (outer) outer.setAttribute("fill", "hsl(0, 0%, 20%)");
           break;
         default:
-          // Dark BG → green dot, green ring
-          dotColor = "hsl(var(--primary))";
-          ringColor = "hsl(var(--primary))";
+          // On dark: green arrow, white outline
+          if (inner) inner.setAttribute("fill", "hsl(82, 85%, 55%)");
+          if (outer) outer.setAttribute("fill", "hsl(0, 0%, 95%)");
       }
-
-      cursor.style.background = dotColor;
-      follower.style.borderColor = ringColor;
-      gsap.to(follower, { scale: 2.5, opacity: 0.4, duration: 0.3 });
-      gsap.to(cursor, { scale: 0, duration: 0.3 });
+      gsap.to(cursor, { scale: 1.3, duration: 0.3, ease: "back.out(1.7)" });
     };
 
     const shrink = () => resetCursor();
@@ -117,17 +105,28 @@ const CustomCursor = () => {
   }, [resetCursor]);
 
   return (
-    <>
-      <div
-        ref={cursorRef}
-        data-cursor-dot
-        className="fixed top-0 left-0 w-3 h-3 rounded-full bg-primary pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 mix-blend-difference hidden md:block"
-      />
-      <div
-        ref={followerRef}
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-primary pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 hidden md:block"
-      />
-    </>
+    <div
+      ref={cursorRef}
+      className="fixed top-0 left-0 pointer-events-none z-[9999] hidden md:block"
+      style={{ marginLeft: "-4px", marginTop: "-2px" }}
+    >
+      <svg width="28" height="34" viewBox="0 0 28 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Outer stroke / border */}
+        <path
+          className="cursor-outer"
+          d="M2 1L26 16.5L15.5 18.5L10 32L2 1Z"
+          fill="hsl(0, 0%, 95%)"
+          stroke="none"
+        />
+        {/* Inner fill */}
+        <path
+          className="cursor-inner"
+          d="M4.5 4.5L23 16L14.5 17.5L10 29L4.5 4.5Z"
+          fill="hsl(82, 85%, 55%)"
+          stroke="none"
+        />
+      </svg>
+    </div>
   );
 };
 
