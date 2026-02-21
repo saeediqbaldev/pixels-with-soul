@@ -134,7 +134,7 @@ const ContactSection = () => {
               <textarea
                 rows={4}
                 className="w-full bg-transparent border-b border-border py-3 text-foreground font-body focus:outline-none focus:border-primary transition-colors duration-300 resize-none"
-                placeholder="Tell me about your project..."
+                placeholder="Tell me about your project...."
               />
             </div>
             <button
