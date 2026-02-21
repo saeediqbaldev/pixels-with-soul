@@ -2,11 +2,13 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Mail, Phone, MapPin, Send, MessageCircle } from "lucide-react";
+import { useState } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const ContactSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
+    const [result, setResult] = useState("");
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -21,6 +23,29 @@ const ContactSection = () => {
     }, sectionRef);
     return () => ctx.revert();
   }, []);
+
+
+
+  // Logic Code
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    setResult("Sending....");
+    const formData = new FormData(event.target);
+    formData.append("access_key", "425b5e5c-5552-49e8-94f3-cf2179f5fd2a");
+
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      setResult("Form Submitted Successfully");
+      event.target.reset();
+    } else {
+      setResult(`Form Submission Failed, Try again or contact on email.`);
+    }
+  };
 
   return (
     <section ref={sectionRef} id="contact" className="py-24 sm:py-32 section-padding">
@@ -55,7 +80,7 @@ const ContactSection = () => {
                 <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-surface flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
                   <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <span className="font-body text-sm sm:text-base">WhatsApp</span>
+                <span className="font-body text-sm sm:text-base">0304 929 7788</span>
               </a>
               <a
                 href="mailto:freelancersaeedofficial@gmail.com"
@@ -64,20 +89,20 @@ const ContactSection = () => {
                 <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-surface flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
                   <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <span className="font-body text-sm sm:text-base break-all">freelancersaeedofficial@gmail.com</span>
+                <span className="font-body text-sm sm:text-base break-all">Freelancersaeedofficial@gmail.com</span>
               </a>
               <div className="contact-anim flex items-center gap-4 text-foreground">
                 <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-surface flex items-center justify-center flex-shrink-0">
                   <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <span className="font-body text-sm sm:text-base">Swabi City, KPK — Pakistan</span>
+                <span className="font-body text-sm sm:text-base">Xeven Pixels Web Solutions Swabi City, KPK — Pakistan</span>
               </div>
             </div>
           </div>
 
           {/* Form */}
           <form
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={onSubmit}
             className="contact-anim glass-card p-6 sm:p-8 md:p-10 space-y-6"
           >
             <div>
@@ -119,6 +144,7 @@ const ContactSection = () => {
               Send Message
               <Send className="w-4 h-4" />
             </button>
+            <span>{result}</span>
           </form>
         </div>
       </div>

@@ -8,43 +8,50 @@ gsap.registerPlugin(ScrollTrigger);
 const plans = [
   {
     name: "Starter",
-    price: "$499",
+    price: "$249",
     desc: "Perfect for small businesses starting their online journey.",
     features: [
-      "5 Page Responsive Website",
+      "Up to 4 Pages Website",
+      "Landing Page",
       "Mobile-First Design",
       "Basic SEO Setup",
-      "Contact Form Integration",
-      "1 Month Free Support",
+      "Logo Design",
+      "Lead Forms",
+      "Approx. Deadline 3 Days",
+      "Wordpress / Wix ",
     ],
     popular: false,
   },
   {
     name: "Professional",
-    price: "$999",
+    price: "$599",
     desc: "Full-featured solution for growing businesses.",
     features: [
-      "10+ Page Custom Website",
+      "Up to 8 Pages Custom Website",
       "Advanced UI/UX Design",
       "Full SEO Optimization",
       "E-Commerce Integration",
       "Speed Optimization",
-      "3 Months Free Support",
+      "Full Branding",
+        "Approx. Deadline 7 Days",
+      "20 Days Free Support",
     ],
     popular: true,
   },
   {
     name: "Enterprise",
-    price: "$1,999",
+    price: "$999",
     desc: "Complete digital solution for established brands.",
     features: [
-      "Unlimited Pages",
-      "Custom Web Application",
+      "Up to 15 Pages Design",
+      "Custom Business Website",
       "Advanced E-Commerce",
-      "API Integrations",
-      "Security Hardening",
+      "Full Branding",
+      "Security ",
       "Performance Audit",
-      "6 Months Free Support",
+        "Approx. Deadline 15 Days",
+      "1 Month Free Support",
+      "CMS / React JS"
     ],
     popular: false,
   },
@@ -81,7 +88,7 @@ const PricingSection = () => {
         <div className="pricing-header text-center mb-16">
           <p className="text-xs uppercase tracking-[0.3em] text-primary mb-4 font-body">Pricing</p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold font-display leading-tight">
-            Investment <span className="text-gradient">plans</span>
+            Plans that match your <span className="text-gradient">goals</span>
           </h2>
         </div>
 

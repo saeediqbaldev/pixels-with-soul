@@ -65,7 +65,7 @@ const HeroSection = () => {
         {/* Text */}
         <div className="order-2 lg:order-1 text-center lg:text-left">
           <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground mb-6 font-body">
-            Web Developer & Designer
+            WordPress website designer
           </p>
           <div ref={titleRef} className="overflow-hidden">
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold font-display leading-[0.95] mb-2">

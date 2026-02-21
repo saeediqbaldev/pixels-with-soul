@@ -5,10 +5,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
-  { number: "304", label: "Projects Done" },
-  { number: "240+", label: "Happy Clients" },
-  { number: "107+", label: "Five Star Reviews" },
-  { number: "01", label: "Award Won" },
+  { number: "387+", label: "Projects Done" },
+  { number: "350+", label: "Happy Clients" },
+  { number: "190", label: "Five Star Reviews" },
+  { number: "6", label: "Years Experience" },
 ];
 
 const AboutSection = () => {
@@ -54,20 +54,18 @@ const AboutSection = () => {
           <div>
             <p className="about-text text-xs uppercase tracking-[0.3em] text-primary mb-4 font-body">About Me</p>
             <h2 className="about-text text-4xl md:text-5xl lg:text-6xl font-extrabold font-display leading-tight">
-              I build websites that turn visitors into{" "}
-              <span className="text-gradient">customers</span>
+              I create digital experiences that drive real{" "}
+              <span className="text-gradient">results</span>
             </h2>
           </div>
 
           <div>
             <p className="about-text text-lg text-muted-foreground leading-relaxed mb-6 font-body">
-              I'm Saeed Iqbal — a proficient website developer specializing in creating dynamic online
-              experiences that seamlessly convert visitors into valued customers.
+              I help businesses turn websites into powerful sales machines. With expertise in WordPress development, branding strategy, and conversion-focused design.
+              I’ve partnered with 370+ businesses worldwide to build digital experiences that don’t just look great — they perform.
             </p>
             <p className="about-text text-lg text-muted-foreground leading-relaxed font-body">
-              With a proven track record of over 300 satisfied clients worldwide, my expertise lies in
-              WordPress, React JS, Shopify, HTML, CSS, and Tailwind. I excel in creating websites that
-              drive sales and elevate brands.
+             
             </p>
           </div>
         </div>

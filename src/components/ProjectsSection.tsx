@@ -139,9 +139,9 @@ const ProjectsSection = () => {
       <div className="section-padding max-w-7xl mx-auto">
         <div className="project-header flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-primary mb-4 font-body">Portfolio</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary mb-4 font-body">Case Studies </p>
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold font-display leading-tight">
-              Recent <span className="text-gradient">projects</span>
+              Brands I’ve helped thrive<span className="text-gradient"> online </span>
             </h2>
           </div>
           <div className="flex gap-3">

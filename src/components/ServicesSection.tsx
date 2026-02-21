@@ -9,25 +9,25 @@ const services = [
   {
     num: "01",
     title: "Website Development",
-    desc: "Cultivate your digital footprint with premium website development services tailored to your objectives. From intricate e-commerce platforms to immersive portals, ensuring unparalleled performance.",
+    desc: "I design modern, brand-focused websites built to make an impact and deliver results. Every website is crafted for speed, user experience, and conversion — ensuring your brand looks professional while turning visitors into customers.",
     icon: Code,
   },
   {
     num: "02",
-    title: "E-Commerce Stores",
-    desc: "Transform your online presence with a keen focus on user experience and functionality. I create tailor-made solutions to showcase your products effectively and boost sales.",
+    title: "Business Solutions",
+    desc: "I provide powerful eCommerce and business solutions that work. I build stores that sell products, capture leads, and provide smooth customer experiences, with secure payments and support systems designed to grow your revenue.",
     icon: ShoppingCart,
   },
   {
     num: "03",
     title: "Website Maintenance",
-    desc: "From robust security enhancements to swift bug fixes, I ensure your website operates at peak performance with proactive backups and lightning-fast speed optimizations.",
+    desc: "Proactive website maintenance for speed, security, SEO, and eCommerce inventory management. Keeping your business online 24/7 and performing at its best.",
     icon: Wrench,
   },
   {
     num: "04",
     title: "UI/UX Design",
-    desc: "Designing modern, responsive interfaces using Figma and industry-leading tools. Creating intuitive experiences with clean design systems and pixel-perfect implementations.",
+    desc: "Designing modern, responsive interfaces using Figma and industry leading tools. Creating intuitive experiences with clean design systems and pixel perfect implementations.",
     icon: Palette,
   },
 ];
@@ -58,7 +58,7 @@ const ServicesSection = () => {
       <div className="max-w-7xl mx-auto">
         <p className="text-xs uppercase tracking-[0.3em] text-primary mb-4 font-body">What I Do</p>
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-display leading-tight mb-16">
-          Services for your <span className="text-gradient">business</span>
+       Solutions that move brands<span className="text-gradient"> forward. </span>
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

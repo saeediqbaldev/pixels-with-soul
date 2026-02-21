@@ -66,7 +66,7 @@ const Footer = () => {
               href="mailto:freelancersaeedofficial@gmail.com"
               className="text-foreground hover:text-primary transition-colors duration-300 font-body block mb-2"
             >
-              freelancersaeedofficial@gmail.com
+              Freelancersaeedofficial@gmail.com
             </a>
             <a
               href="tel:+923049297788"
@@ -79,10 +79,10 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-border">
           <p className="text-sm text-muted-foreground font-body">
-            2025 © Saeed Iqbal — All rights reserved
+            Copyright© 2026  — All rights reserved
           </p>
           <p className="text-sm text-muted-foreground font-body">
-            Swabi City, KPK — Pakistan
+            CEO Xeven Pixels
           </p>
         </div>
       </div>
