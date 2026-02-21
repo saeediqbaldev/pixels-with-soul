@@ -1,53 +1,95 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
-import project1 from "@/assets/project-1.jpg";
-import project2 from "@/assets/project-2.jpg";
-import project3 from "@/assets/project-3.jpg";
-import project4 from "@/assets/project-4.jpg";
+import { projects } from "@/data/projects";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const projects = [
-  { title: "Cameronpink Job Listing", category: "Job Platform", image: project4, url: "https://cameronpink.com", info: "A modern job listing platform with advanced filtering, responsive design and seamless employer dashboards." },
-  { title: "DNB Music Academy", category: "Education", image: project2, url: "https://dnbacademy.net", info: "Full-featured music education platform with course enrollment, student portals, and integrated payment systems." },
-  { title: "Mini Perfumesps Store", category: "E-Commerce", image: project3, url: "https://miniperfumesps.com", info: "High-converting e-commerce store with product galleries, cart system, and secure checkout integration." },
-  { title: "EcoLiquidators", category: "Business", image: project1, url: "https://ecoliquidators.com", info: "Corporate business website with inventory management, quote request systems, and optimized SEO." },
-  { title: "Cameronpink Redesign", category: "Job Platform", image: project4, url: "https://cameronpink.com", info: "Complete UI/UX overhaul with improved accessibility, faster load times, and mobile-first approach." },
-  { title: "DNB Academy Pro", category: "Education", image: project2, url: "https://dnbacademy.net", info: "Premium tier with live streaming classes, progress tracking dashboards, and community features." },
-  { title: "Mini Perfumes Global", category: "E-Commerce", image: project3, url: "https://miniperfumesps.com", info: "International expansion with multi-currency support, localized content, and global shipping integration." },
-  { title: "EcoLiquidators Plus", category: "Business", image: project1, url: "https://ecoliquidators.com", info: "Enhanced platform with real-time inventory sync, automated reporting, and CRM integration." },
-];
 
 const ProjectsSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(0);
   const autoRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isTransitioning = useRef(false);
+
+  // We render: [clone-last, ...originals, clone-first]
+  // Index 0 in "current" maps to trackIndex 1
+  const totalSlides = projects.length;
+  const extendedProjects = [projects[totalSlides - 1], ...projects, projects[0]];
+
+  const getCardWidth = useCallback(() => {
+    if (!trackRef.current) return 0;
+    const card = trackRef.current.children[0] as HTMLElement;
+    if (!card) return 0;
+    return card.offsetWidth + 24; // gap
+  }, []);
+
+  const jumpTo = useCallback((trackIndex: number) => {
+    if (!trackRef.current) return;
+    const w = getCardWidth();
+    gsap.set(trackRef.current, { x: -trackIndex * w });
+  }, [getCardWidth]);
+
+  const animateTo = useCallback((trackIndex: number, onComplete?: () => void) => {
+    if (!trackRef.current) return;
+    const w = getCardWidth();
+    isTransitioning.current = true;
+    gsap.to(trackRef.current, {
+      x: -trackIndex * w,
+      duration: 1.2,
+      ease: "power3.inOut",
+      onComplete: () => {
+        isTransitioning.current = false;
+        onComplete?.();
+      },
+    });
+  }, [getCardWidth]);
 
   const goTo = useCallback((index: number) => {
-    const clamped = ((index % projects.length) + projects.length) % projects.length;
-    setCurrent(clamped);
-    if (trackRef.current) {
-      const card = trackRef.current.children[0] as HTMLElement;
-      if (!card) return;
-      const gap = 24;
-      gsap.to(trackRef.current, {
-        x: -clamped * (card.offsetWidth + gap),
-        duration: 1.2,
-        ease: "power3.inOut",
+    if (isTransitioning.current) return;
+    const trackIndex = index + 1; // offset for prepended clone
+
+    if (index >= totalSlides) {
+      // Going past last → animate to clone-first, then jump to real first
+      animateTo(totalSlides + 1, () => {
+        jumpTo(1);
+        setCurrent(0);
       });
+      return;
     }
-  }, []);
+    if (index < 0) {
+      // Going before first → animate to clone-last, then jump to real last
+      animateTo(0, () => {
+        jumpTo(totalSlides);
+        setCurrent(totalSlides - 1);
+      });
+      return;
+    }
+
+    setCurrent(index);
+    animateTo(trackIndex);
+  }, [totalSlides, animateTo, jumpTo]);
+
+  // Initialize position
+  useEffect(() => {
+    jumpTo(1); // start at first real slide
+  }, [jumpTo]);
+
+  // Recalc on resize
+  useEffect(() => {
+    const handleResize = () => jumpTo(current + 1);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [current, jumpTo]);
 
   const startAuto = useCallback(() => {
     if (autoRef.current) clearInterval(autoRef.current);
     autoRef.current = setInterval(() => {
       setCurrent((prev) => {
-        const next = (prev + 1) % projects.length;
-        goTo(next);
-        return next;
+        goTo(prev + 1);
+        return prev; // goTo handles setCurrent
       });
     }, 5000);
   }, [goTo]);
@@ -134,38 +176,41 @@ const ProjectsSection = () => {
           onMouseUp={handleMouseUp}
         >
           <div ref={trackRef} className="flex gap-6" style={{ willChange: "transform" }}>
-            {projects.map((p, i) => (
-              <a
-                key={i}
-                href={p.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`project-card group flex-shrink-0 w-[85vw] sm:w-[65vw] md:w-[50vw] lg:w-[40vw] aspect-[4/3] border-2 transition-all duration-500 ${
-                  i === current ? "border-primary shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)]" : "border-transparent hover:border-primary/50"
-                }`}
-                onClick={(e) => { if (isDragging.current) e.preventDefault(); }}
-              >
-                <img src={p.image} alt={p.title} loading="lazy" draggable={false} />
-                {/* Default gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-                {/* Hover gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            {extendedProjects.map((p, i) => {
+              // Map extended index to real index for active state
+              const realIndex = i === 0 ? totalSlides - 1 : i === extendedProjects.length - 1 ? 0 : i - 1;
+              const isActive = realIndex === current;
 
-                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
-                  <p className="text-xs uppercase tracking-widest text-primary mb-2 font-body">{p.category}</p>
-                  <h3 className="text-base sm:text-lg md:text-2xl font-bold font-display text-heading leading-snug mb-0 group-hover:mb-2 transition-all duration-300">{p.title}</h3>
-                  {/* Info text - visible only on hover */}
-                  <p className="text-xs sm:text-sm text-muted-foreground font-body leading-relaxed max-h-0 overflow-hidden opacity-0 group-hover:max-h-24 group-hover:opacity-100 transition-all duration-500">
-                    {p.info}
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <div className="w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 rounded-full bg-primary flex items-center justify-center text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
+              return (
+                <Link
+                  key={`${p.id}-${i}`}
+                  to={`/project/${p.id}`}
+                  className={`project-card group flex-shrink-0 w-[85vw] sm:w-[65vw] md:w-[50vw] lg:w-[40vw] aspect-[4/3] border-2 transition-all duration-500 ${
+                    isActive ? "border-primary shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)]" : "border-transparent hover:border-primary/50"
+                  }`}
+                  onClick={(e) => { if (isDragging.current) e.preventDefault(); }}
+                >
+                  <img src={p.image} alt={p.title} loading="lazy" draggable={false} />
+                  {/* Default gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                  {/* Hover gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
+                    <p className="text-xs uppercase tracking-widest text-primary mb-2 font-body">{p.category}</p>
+                    <h3 className="text-base sm:text-lg md:text-2xl font-bold font-display text-heading leading-snug mb-0 group-hover:mb-2 transition-all duration-300">{p.title}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground font-body leading-relaxed max-h-0 overflow-hidden opacity-0 group-hover:max-h-24 group-hover:opacity-100 transition-all duration-500">
+                      {p.info}
+                    </p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 rounded-full bg-primary flex items-center justify-center text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </a>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>
