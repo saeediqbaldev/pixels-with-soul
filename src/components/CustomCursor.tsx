@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
 
-const ARROW_SVG = `<svg width="28" height="34" viewBox="0 0 28 34" fill="none" xmlns="http://www.w3.org/2000/svg"><path class="cursor-outer" d="M2 1L26 16.5L15.5 18.5L10 32L2 1Z" fill="hsl(0,0%,95%)"/><path class="cursor-inner" d="M4.5 4.5L23 16L14.5 17.5L10 29L4.5 4.5Z" fill="hsl(82,85%,55%)"/></svg>`;
+const ARROW_SVG = `<svg width="28" height="34" viewBox="0 0 28 34" fill="none" xmlns="http://www.w3.org/2000/svg"><path class="cursor-outer" d="M2 1L26 16.5L15.5 18.5L10 32L2 1Z" fill="hsl(0,0%,5%)"/><path class="cursor-inner" d="M4.5 4.5L23 16L14.5 17.5L10 29L4.5 4.5Z" fill="hsl(82,85%,55%)"/></svg>`;
 
 const CustomCursor = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -70,16 +70,16 @@ const CustomCursor = () => {
 
       switch (bg) {
         case "green":
-          if (inner) inner.setAttribute("fill", "hsl(0,0%,5%)");
-          if (outer) outer.setAttribute("fill", "hsl(0,0%,95%)");
+          if (inner) inner.setAttribute("fill", "hsl(0,0%,95%)");
+          if (outer) outer.setAttribute("fill", "hsl(0,0%,5%)");
           break;
         case "white":
           if (inner) inner.setAttribute("fill", "hsl(0,0%,5%)");
-          if (outer) outer.setAttribute("fill", "hsl(0,0%,20%)");
+          if (outer) outer.setAttribute("fill", "hsl(0,0%,5%)");
           break;
         default:
           if (inner) inner.setAttribute("fill", "hsl(82,85%,55%)");
-          if (outer) outer.setAttribute("fill", "hsl(0,0%,95%)");
+          if (outer) outer.setAttribute("fill", "hsl(0,0%,5%)");
       }
     };
 
