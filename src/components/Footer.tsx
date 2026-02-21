@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -24,6 +25,13 @@ const Footer = () => {
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                 </a>
               ))}
+              <Link
+                to="/blog"
+                className="text-foreground hover:text-primary transition-colors duration-300 font-body flex items-center gap-1 group"
+              >
+                Helpful Material
+                <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+              </Link>
             </div>
           </div>
 
