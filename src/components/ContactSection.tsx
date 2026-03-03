@@ -135,6 +135,14 @@ const ContactSection = () => {
                 defaultValue="4367f956-92a2-4db1-ac28-927180d955d2"
               />
 
+              
+
+                {/* Hcaptcha */}
+            <div className="h-captcha" data-captcha="true"></div>
+
+             <div className="h-captcha" data-sitekey="96dc2e42-6148-41be-bba6-33aefb40e7c8"></div>
+  <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+
               {/* Name Field */}
 
                <div>
@@ -201,6 +209,8 @@ const ContactSection = () => {
           </div>
         </div>
       </section>
+
+      <script src="https://web3forms.com/client/script.js" async defer></script>
     </>
   );
 };
