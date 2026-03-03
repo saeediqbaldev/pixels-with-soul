@@ -10,7 +10,6 @@ const MarqueeStrip = () => {
     "E-Commerce ",
     "UI/UX Desig",
     "Figma ",
-    "Shopify ",
     "Website Maintenance",
     "SEO ",
     "Website Security",
