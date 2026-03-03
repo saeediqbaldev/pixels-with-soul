@@ -109,7 +109,7 @@ const ProcessSection = () => {
               return (
                 <div
                   key={step.num}
-                  className={`timeline-step relative flex items-start md:items-center gap-6 md:gap-0 ${
+                  className={`timeline-step relative flex items-start md:items-center gap-[0.5rem] md:gap-0 ${
                     isLeft ? "md:flex-row" : "md:flex-row-reverse"
                   }`}
                 >
@@ -117,11 +117,11 @@ const ProcessSection = () => {
                   <div className="timeline-dot absolute left-8 md:left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-primary border-4 border-background z-10 mt-2 md:mt-0 shadow-[0_0_20px_hsl(var(--primary)/0.4)]" />
 
                   {/* Spacer for mobile left margin */}
-                  <div className="w-16 md:hidden flex-shrink-0" />
+                  <div className="w-14 md:hidden flex-shrink-0" />
 
                   {/* Card */}
                   <div
-                    className={`flex-1 md:w-[calc(50%-4rem)] glass-card p-8 sm:p-10 group hover-lift relative overflow-hidden ${
+                    className={`flex-1 md:w-[calc(50%-4rem)] glass-card p-[0.5rem] sm:p-10 group hover-lift relative overflow-hidden ${
                       isLeft ? "md:mr-auto md:pr-14" : "md:ml-auto md:pl-14"
                     }`}
                   >
@@ -131,8 +131,8 @@ const ProcessSection = () => {
                     </div>
 
                     <div className="flex items-start gap-5 relative z-[1]">
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-secondary flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-400">
-                        <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
+                      <div className="w-10 h-10 sm:w-16 sm:h-16 rounded-2xl bg-secondary flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-400">
+                        <Icon className="w-5 h-5 sm:w-5 sm:h-7" />
                       </div>
                       <div className="flex-1">
                         <span className="text-[10px] uppercase tracking-[0.3em] text-primary font-body mb-1 block">Step {step.num}</span>

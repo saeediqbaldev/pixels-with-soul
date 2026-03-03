@@ -57,7 +57,7 @@ const TestimonialsSection = () => {
     testimonials.map((t, i) => (
       <div
         key={i}
-        className="flex-shrink-0 w-[85vw] sm:w-[400px] md:w-[450px] glass-card p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:border-primary/30 hover:-translate-y-1"
+        className="flex-shrink-0 w-[85vw] sm:w-[400px] md:w-[450px] glass-card p-8 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:border-primary/30 hover:-translate-y-1"
       >
         <div>
           <Quote className="w-8 h-8 text-primary mb-4" />
@@ -71,7 +71,7 @@ const TestimonialsSection = () => {
     ));
 
   return (
-    <section ref={sectionRef} id="testimonials" className="py-24 sm:py-32 overflow-hidden">
+    <section ref={sectionRef} id="testimonials" className="py-[3rem] sm:py-[3rem]  overflow-hidden">
       <div className="section-padding max-w-7xl mx-auto">
         <div className="testimonial-header text-center mb-16">
           <p className="text-xs uppercase tracking-[0.3em] text-primary mb-4 font-body">Testimonials</p>
@@ -81,7 +81,7 @@ const TestimonialsSection = () => {
         </div>
       </div>
       <div className="overflow-hidden" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-        <div ref={trackRef} className="flex gap-6 will-change-transform">
+        <div ref={trackRef} className="flex gap-6 will-change-transform py-2" >
           {renderCards()}
           {renderCards()}
         </div>

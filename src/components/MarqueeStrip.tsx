@@ -5,14 +5,15 @@ const MarqueeStrip = () => {
   const trackRef = useRef<HTMLDivElement>(null);
 
   const items = [
-    "WordPress Expert",
+    "WordPress Designer",
     "React JS Developer",
-    "E-Commerce Specialist",
-    "UI/UX Designer",
-    "Figma Pro",
-    "Shopify Developer",
+    "E-Commerce ",
+    "UI/UX Desig",
+    "Figma ",
+    "Shopify ",
     "Website Maintenance",
-    "SEO Optimization",
+    "SEO ",
+    "Website Security",
   ];
 
   useEffect(() => {

@@ -17,11 +17,11 @@ const links = [
 ];
 
 const socials = [
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/saeediqbal/" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/saeediqbaldev/" },
   { label: "WhatsApp", href: "https://wa.me/923049297788" },
-  { label: "Email", href: "mailto:freelancersaeedofficial@gmail.com" },
-  { label: "Fiverr", href: "#" },
-  { label: "Upwork", href: "#" },
+  { label: "Email", href: "mailto:contact@saeediqbal.net" },
+  { label: "Fiverr", href: "https://www.fiverr.com/saeed_dm_pro" },
+  { label: "Upwork", href: "https://www.upwork.com/freelancers/~010dcc15d5037ecc0e" },
 ];
 
 const OffCanvasMenu = ({ isOpen, onClose }: OffCanvasMenuProps) => {

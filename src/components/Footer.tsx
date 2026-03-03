@@ -40,10 +40,10 @@ const Footer = () => {
             <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4 font-body">Socials</p>
             <div className="flex flex-col gap-2">
               {[
-                { l: "LinkedIn", h: "https://www.linkedin.com/in/saeediqbal/" },
+                { l: "LinkedIn", h: "https://www.linkedin.com/in/saeediqbaldev/" },
                 { l: "WhatsApp", h: "https://wa.me/923049297788" },
-                { l: "Fiverr", h: "#" },
-                { l: "Upwork", h: "#" },
+                { l: "Fiverr", h: "https://www.fiverr.com/saeed_dm_pro" },
+                { l: "Upwork", h: "https://www.upwork.com/freelancers/~010dcc15d5037ecc0e" },
               ].map((s) => (
                 <a
                   key={s.l}
@@ -66,7 +66,7 @@ const Footer = () => {
               href="mailto:freelancersaeedofficial@gmail.com"
               className="text-foreground hover:text-primary transition-colors duration-300 font-body block mb-2"
             >
-              Freelancersaeedofficial@gmail.com
+              contact@saeediqbal.net
             </a>
             <a
               href="tel:+923049297788"
