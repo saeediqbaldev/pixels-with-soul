@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Mail, Phone, MapPin, Send, MessageCircle } from "lucide-react";
@@ -9,6 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 const ContactSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [result, setResult] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -122,18 +124,30 @@ const ContactSection = () => {
             {/* HTML FORM */}
 
             <form
-              action="https://api.web3forms.com/submit"
-              method="POST"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setResult("Sending...");
+                const formData = new FormData(e.currentTarget);
+                formData.append("access_key", "4367f956-92a2-4db1-ac28-927180d955d2");
+                try {
+                  const res = await fetch("https://api.web3forms.com/submit", {
+                    method: "POST",
+                    body: formData,
+                  });
+                  const data = await res.json();
+                  if (data.success) {
+                    navigate("/thank-you");
+                  } else {
+                    setResult("Failed to submit. Try again later.");
+                  }
+                } catch {
+                  setResult("Network error. Please try again.");
+                }
+              }}
               className="contact-anim glass-card p-6 sm:p-8 md:p-10 space-y-6"
             >
 
-              <input type="hidden" name="redirect" defaultValue="https://saeediqbal.net/" />
-
-              <input
-                type="hidden"
-                name="access_key"
-                defaultValue="4367f956-92a2-4db1-ac28-927180d955d2"
-              />
+                {/* Hcaptcha */}
 
 
                 {/* Hcaptcha */}
