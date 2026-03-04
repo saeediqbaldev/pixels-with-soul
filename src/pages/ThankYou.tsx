@@ -180,7 +180,7 @@ const ThankYou = () => {
           </h2>
 
           <p className="ty-anim text-sm sm:text-base text-muted-foreground font-body leading-relaxed max-w-lg mx-auto mb-12">
-            I appreciate you reaching out! I'll review your message and get back
+            I appreciate you reaching out! I'll get back
             to you as soon as possible. In the meantime, feel free to connect
             with me through any of the channels below.
           </p>
