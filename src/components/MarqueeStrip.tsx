@@ -8,11 +8,12 @@ const MarqueeStrip = () => {
     "WordPress Designer",
     "React JS Developer",
     "E-Commerce ",
-    "UI/UX Desig",
+    "UI/UX Design",
     "Figma ",
     "Website Maintenance",
-    "SEO ",
+    "SEO Optimization ",
     "Website Security",
+    "Website Performance",
   ];
 
   useEffect(() => {
