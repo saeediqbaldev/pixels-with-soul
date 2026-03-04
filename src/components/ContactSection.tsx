@@ -165,6 +165,7 @@ const ContactSection = () => {
                   name="name"
                   className="w-full bg-transparent border-b border-border py-3 text-foreground font-body focus:outline-none focus:border-primary transition-colors duration-300"
                   placeholder="Your name"
+                  required
                 />
               </div>
 
@@ -180,6 +181,7 @@ const ContactSection = () => {
                   type="email" name="email" 
                   className="w-full bg-transparent border-b border-border py-3 text-foreground font-body focus:outline-none focus:border-primary transition-colors duration-300"
                   placeholder="your@email.com"
+                  required
                 />
               </div>
               
@@ -194,6 +196,7 @@ const ContactSection = () => {
                   className="w-full bg-transparent border-b border-border py-3 text-foreground font-body focus:outline-none focus:border-primary transition-colors duration-300"
                   placeholder="Project inquiry"
                   name="Subject"
+                  required
                 />
               </div>
 
