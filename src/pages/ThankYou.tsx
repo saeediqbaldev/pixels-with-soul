@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { Mail, MessageCircle, ArrowLeft, CheckCircle2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CustomCursor from "@/components/CustomCursor";
 
 const ThankYou = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -96,6 +97,7 @@ const ThankYou = () => {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-background">
+      <CustomCursor />
       <Header />
 
       <section className="min-h-screen flex items-center justify-center section-padding py-32">
